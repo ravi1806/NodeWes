@@ -27,7 +27,6 @@ That will populate 16 stores with 3 authors and 41 reviews. The logins for the a
 const express = require('express');
 const router = express.Router();
 
-// Do work here
 // The cb wil run everytime some1 visits this url
 // url can be set in app.js file with app.use('url', exportedRoute)
 // The cb gives req, res and next()
@@ -47,4 +46,26 @@ router.get('/reverse/:name', (req, res) => {
 });
 
 module.exports = router;
+```
+
+## Templating
+
+```js
+extends layout
+extends layout will get the layout file which has additional contents.. block content is inside that layout, we just overwrite it here
+block content
+	//- writing div is optional, we can add classes directly and it will assume its a div there
+	.wrapper.classone
+		//- Indentations are used to nest, #{} used to render the variable to text.
+		//- we can write js in pug files usin - sign
+		- const upDog = dog.toUpperCase();
+		p.classtwo Hello my dog name is #{upDog}!!!
+		//- we could have used inline js too like #{dog.toUpperCase()}!!
+		span#idName Yo!
+		img(src="dog.jpg" alt="Dog image") 
+	//- inside the attributes eg. image's alt we have to write ${dog} inside es6 template strings to render its name, #{} wont work in atts
+	h2 
+		//- here we use pipe otherwise it will make it a html tag its basically a new line content
+		| Hello
+		em  How are you?
 ```
