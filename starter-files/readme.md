@@ -69,3 +69,10 @@ block content
 		| Hello
 		em  How are you?
 ```
+### Model View Controller Pattern
+
+* Create a controller file in the controllers folder. Name it storeController.
+* `exports.homePage = (req, res) => { res.render(index) };` in storeController.
+* create a pug file in the views folder called index.pug, above code renders this file.
+* In the index.js file in routes, import storeController via, `const storeController = require('../controllers/storeController`
+* Use it as `route.get('/', storeController.homePage);
