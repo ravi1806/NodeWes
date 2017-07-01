@@ -69,10 +69,29 @@ block content
 		| Hello
 		em  How are you?
 ```
-### Model View Controller Pattern
+## Model View Controller Pattern
 
 * Create a controller file in the controllers folder. Name it storeController.
 * `exports.homePage = (req, res) => { res.render(index) };` in storeController.
 * create a pug file in the views folder called index.pug, above code renders this file.
 * In the index.js file in routes, import storeController via, `const storeController = require('../controllers/storeController`
-* Use it as `route.get('/', storeController.homePage);
+* Use it as `route.get('/', storeController.homePage);`
+
+## Middleware
+
+* The work done between req and res is done by middleware.
+* next() just means go onto the next middleware or next action.
+
+* An example of a custom middleware
+
+* we first need to configure the route `route.get('/', storeController.myMiddleware, storeController.homePage);
+```js
+exports.myMiddleware = (req, res, next) => { req.name = 'Ravi'; next() }
+exports.homePage = (req, res) => {console.log(req.name);}
+```
+* Now there are global middleware available too, which occur before every route his hit. All that happens in the app.js file. 
+Inside app.use file. We run these middleware even before we hit those routes. eg. Anyone can get images etc. from the public folder, they dont have to hit any route for it. Secondly, bodyParser gets the submitted data on req.body, expressValidator and cookieParser. We can set a cookieParser as `res.cookie('name', 'This is the cookie name', {maxAge: 3300 });` last param being the lifetime of the cookie. Can look up in dev console, Applications, cookie. 
+
+* After all global middleware, we inject our own routes, app.use('/', moduleName);
+* Then its the error handlers.
+* Make a new error `exports.noFound = (req, res, next) => { const err = new Error('Not Found'); err.status = 404, next(err);} `
