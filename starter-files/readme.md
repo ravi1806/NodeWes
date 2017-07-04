@@ -95,3 +95,49 @@ Inside app.use file. We run these middleware even before we hit those routes. eg
 * After all global middleware, we inject our own routes, app.use('/', moduleName);
 * Then its the error handlers.
 * Make a new error `exports.noFound = (req, res, next) => { const err = new Error('Not Found'); err.status = 404, next(err);} `
+
+## Store Schema
+
+* In the models folder, create a file called store.. add the following code to it
+```js
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const slug = require('slug');
+
+const storeSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Please enter a store name' // required: true will throw an ugly error so mention this string
+    },
+    slug: slug,
+    description: {
+        type: String,
+        trim: true
+    },
+    tags: [String]
+});
+
+// Slug is to be auto generated, we use pre for that.
+// save won't happen until we are done with this function.
+storeSchema.pre('save', function (next) {
+    // so that it doesn't happen everytime we need to use this if clause
+    if(!this.isModified('name')){
+        next(); // skip it
+        return; // stop this fn from running
+    }
+    // take the name, run it through the slug package we imported at the top
+    // set the slug property to whatever the output of the slug is
+    this.slug = slug(this.name);
+    next();
+});
+
+module.exports = mongoose.model('Store', storeSchema);
+
+```
+Also import this schema inside start.js 
+```js
+// Importing all of our models
+require('./models/Store');
+```
+
